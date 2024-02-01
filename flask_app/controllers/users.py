@@ -8,13 +8,13 @@ bcrypt = Bcrypt(app)
 @app.route('/')
 def index():
     if 'user_id' in session:
-        return redirect('/books')
+        return redirect('/dashboard')
     return redirect('/logout')
 
 @app.route('/register')
 def registerPage():
     if 'user_id' in session:
-        return redirect('/books')
+        return redirect('/dashboard')
     return render_template('register.html')
 
 
@@ -69,50 +69,12 @@ def logout():
     return redirect('/login')
 
 
-@app.route('/profile')
-def profile():
+@app.route('/dashboard')
+def dashboard():
     if 'user_id' not in session:
         return redirect('/')
     data = {
         'id': session['user_id']
     }
-    return render_template('profile.html', loggedUser = User.get_user_by_id(data))
+    return render_template('dashboard.html', loggedUser = User.get_user_by_id(data))
 
-@app.route('/edit/user')
-def editUser():
-    if 'user_id' not in session:
-        return redirect('/')
-    data = {
-        'id': session['user_id']
-    }
-    return render_template('editUser.html', loggedUser = User.get_user_by_id(data))
-
-
-
-
-@app.route('/edit/user', methods = ['POST'])
-def edit():
-    if 'user_id' not in session:
-        return redirect('/')
-    if not User.validate_userUpdate(request.form):
-        return redirect(request.referrer)
-    
-    data = {
-        'firstName': request.form['firstName'],
-        'lastName': request.form['lastName'],
-        'id': session['user_id']
-    }
-    User.update(data)
-    flash('User succesfully updated', 'updateSucces')
-    return redirect(request.referrer)
-
-
-@app.route('/delete/user')
-def delete():
-    if 'user_id' not in session:
-        return redirect('/')
-    data = {
-        'id': session['user_id']
-    }
-    User.delete(data)
-    return redirect('/logout')

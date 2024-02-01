@@ -40,11 +40,6 @@ class User:
         return connectToMySQL(cls.db_name).query_db(query, data)
     
     @classmethod
-    def update(cls, data):
-        query ="UPDATE users set firstName = %(firstName)s, lastName = %(lastName)s WHERE id = %(id)s;"
-        return connectToMySQL(cls.db_name).query_db(query, data)
-    
-    @classmethod
     def delete(cls, data):
         query = "DELETE FROM users where id = %(id)s;"
         return connectToMySQL(cls.db_name).query_db(query, data)
@@ -77,15 +72,4 @@ class User:
             flash("Last name is required!", 'lastNameRegister')
             is_valid = False
         return is_valid
-    @staticmethod
-    def validate_userUpdate(user):
-        is_valid = True
-        if len(user['firstName'])<1:
-            flash("First name is required!", 'nameRegister')
-            is_valid = False
-        if len(user['lastName'])<1:
-            flash("Last name is required!", 'lastNameRegister')
-            is_valid = False
-        return is_valid
-
-        
+    
